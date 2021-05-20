@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"errors"
 	"gopkg.in/mgo.v2/bson"
+	
 )
 
 
@@ -80,7 +81,8 @@ func SearchEmpFromDB(empdetails interface{}) (error,[]EmpDetails){
 	query:= make([]map[string]interface{},0)
 	for key,value:= range origin{
 		if key!="skills"{
-			query=append(query,map[string]interface{}{key:value})
+			
+			query=append(query,map[string]interface{}{key:bson.M{"$regex":value,"$options":"i"}})
 		}
 		if key=="skills"{
 			doc := bson.M{"skills":bson.M{"$in":value}}
@@ -89,12 +91,6 @@ func SearchEmpFromDB(empdetails interface{}) (error,[]EmpDetails){
 		
 	}
 	fmt.Println(query)
-	var project interface{}
-	type proj struct{
-		Empid int64 `json:"empid"`
-	}
-	projection:=project.(proj)
-	projection.Empid=0
 	if err := helper.Collection().Find(bson.M{"$or":query}).All(&employeelist); err != nil {
 		return err,[]EmpDetails{}
 	}
@@ -104,6 +100,10 @@ func SearchEmpFromDB(empdetails interface{}) (error,[]EmpDetails){
 func ListEmpFromDB(empdetails interface{}) (error,[]EmpDetails){
 	var employeelist []EmpDetails
 	origin:= empdetails.(map[string]interface {})
+
+	for key,value:= range origin{
+		origin[key]=bson.M{"$regex":value,"$options":"i"}
+	}
 	if err := helper.Collection().Find(origin).All(&employeelist); err != nil {
 		return err,[]EmpDetails{}
 	}
