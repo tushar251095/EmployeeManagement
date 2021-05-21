@@ -1,10 +1,35 @@
 package handler
 
 import (
+	"time"
 	"net/http"
 	"github.com/gin-gonic/gin"
 	service "EmployeeAssisgnment/api/services"
+	model "EmployeeAssisgnment/api/model"
+	helper "EmployeeAssisgnment/api/helpers"
+	"fmt"
 )
+
+
+func TokenGeneration() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		login := model.Login{}
+		c.Bind(&login)
+		_, isValidUser := service.ValidateUser(login)
+		if isValidUser {
+			token, err := helper.GenerateToken(login, 24*time.Hour)
+			if err != nil {
+				fmt.Print("error while generating token:", err)
+			}
+			c.Header("Authorization", token)
+
+			c.JSON(http.StatusOK, gin.H{"Authorization": token})
+		} else {
+			c.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"Error": "Please Enter valid username and password"})
+		}
+	}
+}
 
 
 func AddEmp() gin.HandlerFunc {

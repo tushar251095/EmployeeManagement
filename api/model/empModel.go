@@ -1,4 +1,9 @@
-package api
+package model
+
+type Login struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
 type EmpDetails struct {
 	// Id   string `json:"id" bson:"_id,omitempty"`

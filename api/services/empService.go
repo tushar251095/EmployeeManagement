@@ -4,6 +4,15 @@ import (
 	model "EmployeeAssisgnment/api/model"
 )
 
+func ValidateUser(login model.Login) (model.Login, bool) {
+
+	if login.Username=="TusharN" && login.Password=="tusharnemade"{
+		return login,true
+	}else{
+		return model.Login{},false
+	}
+}
+
 func NewEmp() model.EmpDetails {
 	return model.EmpDetails{}
 }

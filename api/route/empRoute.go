@@ -5,7 +5,7 @@ import (
 	handler "EmployeeAssisgnment/api/handler"
 )
 
-func Init(r *gin.Engine) {
+func Init(r,o *gin.RouterGroup) {
 
 	r.POST("/add", handler.AddEmp())
 	r.PUT("/update", handler.UpdateEmp())
@@ -14,4 +14,5 @@ func Init(r *gin.Engine) {
 	r.POST("/delete", handler.DeleteEmp())
 	r.POST("/restore",handler.RestoreEmp())
 	r.GET("/viewdeleted",handler.ViewDeletedEmp())
+	o.POST("/token",handler.TokenGeneration())
 }
