@@ -3,21 +3,22 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"EmployeeAssisgnment/api"
 	"github.com/gin-gonic/gin"
-	helper "EmployeeAssisgnment/api/helpers"
+	database "EmployeeAssisgnment/api/database"
+	route "EmployeeAssisgnment/api/route"
+
 )
 
 func main() {
 	fmt.Println("Gin-Gonic Server")
-	 helper.InitDB()
+	database.InitDB()
 	startServer()
 }
 
 func startServer() {
 	router := gin.Default()
 	router.GET("/", checkStatus())
-	api.Init(router)
+	route.Init(router)
 	s := &http.Server{
 		Addr:    ":4700",
 		Handler: router,
